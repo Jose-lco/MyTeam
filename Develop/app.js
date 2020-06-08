@@ -27,52 +27,58 @@ createQuestions('input', 'email', 'What is your email address?');
 createQuestions('input', 'role', 'What is your role in the company?');
 createQuestions('input', 'more', 'Do you want to add more members?');
 async function getHTML() {
-    let response1 = await inquirer.prompt(questions);
-    let newObject;
-    let response2;
-    switch (response1.role) {
-        case 'Engineer':
-            response2 = await inquirer.prompt(
-                {
-                    type: 'input',
-                    name: 'github',
-                    message: 'What is your Github username?'
-                }
-            )
-            newObject = { ...response1, ...response2 }
-            break;
-        case 'Intern':
-            response2 = await inquirer.prompt(
-                {
-                    type: 'input',
-                    name: 'school',
-                    message: 'What school are you attending?'
-                }
-            )
-            newObject = { ...response1, ...response2 }
-            break;
-        case 'Manager':
-            response2 = await inquirer.prompt(
-                {
-                    type: 'input',
-                    name: 'office number',
-                    message: 'How many people do you manage?'
-                }
-            )
-            newObject = { ...response1, ...response2 }
-            break;
-    }
     let employees = [];
-    switch (newObject.role) {
-        case 'Intern':
-            employees.push(new Intern(newObject.name, newObject.id, newObject.email, newObject.school))
-            break;
-        case 'Manager':
-            employees.push(new Manager(newObject.name, newObject.id, newObject.email, newObject.officeNumber))
-            break;
-        case 'Engineer':
-            employees.push(new Engineer(newObject.name, newObject.id, newObject.email, newObject.github))
-            break;
+    let isDone = false;
+    while (!isDone) {
+        let response1 = await inquirer.prompt(questions);
+        let newObject;
+        let response2;
+        switch (response1.role) {
+            case 'Engineer':
+                response2 = await inquirer.prompt(
+                    {
+                        type: 'input',
+                        name: 'github',
+                        message: 'What is your Github username?'
+                    }
+                )
+                newObject = { ...response1, ...response2 }
+                break;
+            case 'Intern':
+                response2 = await inquirer.prompt(
+                    {
+                        type: 'input',
+                        name: 'school',
+                        message: 'What school are you attending?'
+                    }
+                )
+                newObject = { ...response1, ...response2 }
+                break;
+            case 'Manager':
+                response2 = await inquirer.prompt(
+                    {
+                        type: 'input',
+                        name: 'office number',
+                        message: 'How many people do you manage?'
+                    }
+                )
+                newObject = { ...response1, ...response2 }
+                break;
+        }
+        switch (newObject.role) {
+            case 'Intern':
+                employees.push(new Intern(newObject.name, newObject.id, newObject.email, newObject.school))
+                break;
+            case 'Manager':
+                employees.push(new Manager(newObject.name, newObject.id, newObject.email, newObject.officeNumber))
+                break;
+            case 'Engineer':
+                employees.push(new Engineer(newObject.name, newObject.id, newObject.email, newObject.github))
+                break;
+        };
+        if (response1.more === 'no') {
+            isDone = true;
+        };
     };
     fs.writeFile(outputPath, render(employees), err => {
         if (err) { throw err };
