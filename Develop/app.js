@@ -25,8 +25,9 @@ createQuestions('input', 'name', 'What is the name of this employee?');
 createQuestions('input', 'id', 'What is your employee ID number');
 createQuestions('input', 'email', 'What is your email address?');
 createQuestions('input', 'role', 'What is your role in the company?');
+createQuestions('input', 'more', 'Do you want to add more members?');
 async function getHTML() {
-    let response1 = await inquirer.prompt(questions)
+    let response1 = await inquirer.prompt(questions);
     let newObject;
     let response2;
     switch (response1.role) {
@@ -74,7 +75,7 @@ async function getHTML() {
             break;
     };
     fs.writeFile(outputPath, render(employees), err => {
-        if (err) { throw err};
+        if (err) { throw err };
         console.log("A new html file was generated!");
     });
 }
